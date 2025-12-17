@@ -1,8 +1,15 @@
 package bridge;
 
+import bridge.controller.BridgeController;
+import bridge.factory.ApplicationFactory;
+
 public class Application {
 
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        ApplicationFactory factory = new ApplicationFactory();
+
+        BridgeController controller = factory.controller();
+
+        controller.run();
     }
 }
