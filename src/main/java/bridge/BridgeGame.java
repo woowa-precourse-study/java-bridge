@@ -11,6 +11,7 @@ public class BridgeGame {
     private final List<String> bridgeAnswer;
     private List<String> moveUp;
     private List<String> moveDown;
+    private final int size;
 
 
     public BridgeGame(int bridgeLength) {
@@ -20,6 +21,7 @@ public class BridgeGame {
         this.bridgeAnswer = bridgeMaker.makeBridge(bridgeLength);
         this.moveUp = new ArrayList<>();
         this.moveDown = new ArrayList<>();
+        this.size=bridgeLength;
     }
 
     /**
@@ -43,6 +45,15 @@ public class BridgeGame {
         }
         return "X";
     }
+
+    public boolean isFull() {
+        if (moveUp.size() < size) {
+            return false;
+        }
+        return true;
+    }
+
+
 
     /**
      * 사용자가 게임을 다시 시도할 때 사용하는 메서드

@@ -18,81 +18,43 @@ public class BridgeController {
         List<String> moveUp = new ArrayList<>();
         List<String> moveDown = new ArrayList<>();
         BridgeGame bridgeGame = new BridgeGame(num);
-        String result="";
+        String success = "";
 
         while (true) {
             bridgeGame.retry();
             times += 1;
-            int idx = 0;
-            result = "성공";
-            String isRestart = "Quit";
-            while (moveUp.size() < num) {
-                String move = inputView.readMoving();
-                // move 사용자  , bridgeAnswer.get(idx) : 답
-                bridgeGame.move(move,idx);
-                if (moveUp.size() < num) {
-                    moveUp = bridgeGame.getMoveUp();
-                    moveDown = bridgeGame.getMoveDown();
-                    outputView.printMap(moveUp, moveDown);
-                }
-
-                if (bridgeGame.userCorrect(move,idx).equals("X")){
-                    result = "실패";
-                    isRestart = inputView.readGameCommand();
-                    break;
-                }
-
-                idx += 1;
-            }
-
+            List<String> result = playOneRound(bridgeGame);
+            success = result.get(0);
             moveUp = bridgeGame.getMoveUp();
             moveDown = bridgeGame.getMoveDown();
 
-            if (result.equals("성공") || isRestart.equals("Restart")) {
+            if (success.equals("성공") || result.get(1).equals("Restart")) {
                 break;
             }
         }
-        outputView.printResult(moveUp, moveDown, result, times);
+        outputView.printResult(moveUp, moveDown, success, times);
 
     }
 
-
-    public List<List<String>> playGame(int num, List<String> bridgeAnswer) {
-        List<String> moveUp = new ArrayList<>();
-        List<String> moveDown = new ArrayList<>();
+    public List<String> playOneRound(BridgeGame bridgeGame) {
         int idx = 0;
         String result = "성공";
         String isRestart = "Quit";
-        while (moveUp.size() < num) {
+        while (!bridgeGame.isFull()) {
             String move = inputView.readMoving();
-            // move 사용자  , bridgeAnswer.get(idx) : 답
+            bridgeGame.move(move, idx);
+            if (!bridgeGame.isFull()) {
+                outputView.printMap(bridgeGame.getMoveUp(), bridgeGame.getMoveDown());
+            }
 
-            if (move.equals("U") && bridgeAnswer.get(idx).equals("U")) {
-                moveUp.add("O");
-                moveDown.add(" ");
-            } else if (move.equals("U") && bridgeAnswer.get(idx).equals("D")) {
-                moveUp.add("X");
-                moveDown.add(" ");
-                result = "실패";
-                isRestart = inputView.readGameCommand();
-                break;
-            } else if (move.equals("D") && bridgeAnswer.get(idx).equals("D")) {
-                moveUp.add(" ");
-                moveDown.add("O");
-            } else if (move.equals("D") && bridgeAnswer.get(idx).equals("U")) {
-                moveUp.add(" ");
-                moveDown.add("X");
+            if (bridgeGame.userCorrect(move, idx).equals("X")) {
                 result = "실패";
                 isRestart = inputView.readGameCommand();
                 break;
             }
-            if (moveUp.size() < num) {
-                outputView.printMap(moveUp, moveDown);
-            }
+
             idx += 1;
-
         }
-        return List.of(List.of(result, isRestart), moveUp, moveDown);
-
+        return List.of(result, isRestart);
     }
 }
