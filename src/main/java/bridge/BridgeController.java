@@ -2,16 +2,17 @@ package bridge;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class BridgeController {
     private final InputView inputView;
+    private final OutputView outputView;
     //    private final BridgeService bridgeService;
     static String PREFIX_ERROR = "[ERROR] ";
     static final int MAX_RETRY = 10;
 
     public BridgeController() {
         this.inputView = new InputView();
+        this.outputView = new OutputView();
 //        this.bridgeService = bridgeService;
     }
 
@@ -41,12 +42,7 @@ public class BridgeController {
             }
         }
 
-
-        System.out.println("최종 게임 결과");
-        System.out.println("[ " + String.join(" | ", moveUp) + " ]");
-        System.out.println("[ " + String.join(" | ", moveDown) + " ]");
-        System.out.println("게임 성공 여부: " + gameResult);
-        System.out.println("총 시도한 횟수: " + times);
+        outputView.printResult(moveUp, moveDown, gameResult, times);
 
     }
 
@@ -80,8 +76,7 @@ public class BridgeController {
                 break;
             }
             if (moveUp.size() < num) {
-                System.out.println("[ " + String.join(" | ", moveUp) + " ]");
-                System.out.println("[ " + String.join(" | ", moveDown) + " ]");
+                outputView.printMap(moveUp, moveDown);
             }
             idx += 1;
 
