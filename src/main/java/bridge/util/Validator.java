@@ -12,4 +12,12 @@ public class Validator {
     public static boolean checkRange(int size){
         return size < MIN_LENGTH || size > MAX_LENGTH;
     }
+
+    public static boolean checkMoving(String movingInput){
+        return movingInput.equals("U") || movingInput.equals("D");
+    }
+
+    public static boolean checkCommand(String commandInput){
+        return commandInput.equals("R") || commandInput.equals("Q");
+    }
 }
