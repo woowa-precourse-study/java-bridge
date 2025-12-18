@@ -1,16 +1,34 @@
 package bridge.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 다리 건너기 게임을 관리하는 클래스
  */
 public class BridgeGame {
+    private List<String> bridge;
+    private ArrayList<String>[] moveResult = new ArrayList[2];
+
+    public BridgeGame(List<String> brideList) {
+        this.bridge = brideList;
+        moveResult[0] = new ArrayList<>();
+        moveResult[1] = new ArrayList<>();
+    }
 
     /**
      * 사용자가 칸을 이동할 때 사용하는 메서드
      * <p>
      * 이동을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
-    public void move() {
+    public void move(String movingInput, String result) {
+        if(movingInput.equals("U")){
+            moveResult[0].add(result);
+            moveResult[1].add(" ");
+        }else{
+            moveResult[0].add(" ");
+            moveResult[1].add(result);
+        }
     }
 
     /**
@@ -19,5 +37,22 @@ public class BridgeGame {
      * 재시작을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
     public void retry() {
+        moveResult[0].remove(moveResult[0].size()-1);
+        moveResult[1].remove(moveResult[1].size()-1);
     }
+
+    public String checkMoveable(String movingInput){
+        String currentBox = bridge.get(bridge.size()-1);
+
+        if(movingInput.equals(currentBox)){
+            return "O";
+        }
+        return "X";
+    }
+
+    public ArrayList<String>[] getMoveResult() {
+        return moveResult;
+    }
+
+
 }
