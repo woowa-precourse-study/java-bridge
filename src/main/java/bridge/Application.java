@@ -16,23 +16,20 @@ public class Application {
     // ===== main / run =====
 
     public static void main(String[] args) {
-        int time=1;
-        while(true){
             initCommands();
-            Boolean isResatrt=run();
-            if (!isResatrt){
-                break;
+            try{
+                run();
+            } catch(IllegalStateException e){
+                System.out.println(e.getMessage());
             }
-            time+=1;
-            System.out.println("총 시도한 횟수: "+time);
-        }
 
     }
 
 
-    static Boolean run() {
+    static void run() {
         System.out.println("다리 건너기 게임을 시작합니다.");
         int num=0;
+        int times=0;
         try{
             System.out.println("다리의 길이를 입력해주세요.");
             // 숫자 입력
@@ -43,8 +40,6 @@ public class Application {
             ));
             num=Integer.parseInt(number);
 
-//            Runnable command = commands.get(choice);
-//            command.run();
 
         } catch(IllegalArgumentException | NoSuchElementException e){ // 입력안함은 여기서 자동 제거
             System.out.println(PREFIX_ERROR+e.getMessage());
@@ -54,11 +49,58 @@ public class Application {
         BridgeNumberGenerator bridgeNumberGenerator=new BridgeRandomNumberGenerator();
         BridgeMaker bridgeMaker=new BridgeMaker(bridgeNumberGenerator);
         List<String> bridgeAnswer=bridgeMaker.makeBridge(num);
+        List<String> copyAnswer=new ArrayList<>();
+        List<String> moveUp = new ArrayList<>();
+        List<String> moveDown= new ArrayList<>();
+        String gameResult="";
+
+        while (true){
+            times+=1;
+            copyAnswer.addAll(bridgeAnswer);  // 깊은 복사
+            List<List<String>> result=playGame(num,copyAnswer);
+            moveUp = result.get(1);
+            moveDown = result.get(2);
+            gameResult=result.get(0).get(0);
+
+            if (gameResult.equals("성공") || gameResult.equals("Restart")){
+                break;
+            }
+        }
 
 
+        System.out.println("최종 게임 결과");
+        System.out.println("[ "+String.join(" | ",moveUp)+" ]");
+        System.out.println("[ "+String.join(" | ",moveDown)+" ]");
+        System.out.println("게임 성공 여부: "+gameResult);
+        System.out.println("총 시도한 횟수: "+times);
+
+    }
+
+
+    static String restartGame(){
+        try{
+            System.out.println("게임을 다시 시도할지 여부를 입력해주세요. (재시도: R, 종료: Q)");
+            // 숫자 입력
+            String move = readInputWithRetry(List.of(
+                    Validator::validateNotBlank,
+                    Validator::validateRestart
+            ));
+            if (move.equals("R")){
+                return "Restart";
+            }
+
+        } catch(IllegalArgumentException | NoSuchElementException e){ // 입력안함은 여기서 자동 제거
+            System.out.println(PREFIX_ERROR+e.getMessage());
+        }
+        return "Quit";
+    }
+
+    static List<List<String>> playGame(int num, List<String> bridgeAnswer){
         List<String> moveUp=new ArrayList<>();
         List<String> moveDown=new ArrayList<>();
         int idx=0;
+        String result="성공";
+        String isRestart="Quit";
         while (moveUp.size()<num){
             try{
                 System.out.println("이동할 칸을 선택해주세요. (위: U, 아래: D)");
@@ -67,7 +109,6 @@ public class Application {
                         Validator::validateNotBlank,
                         Validator::validateMove
                 ));
-                idx+=1;
 
                 if (move.equals("U") && bridgeAnswer.get(idx).equals("U")){
                     moveUp.add("O");
@@ -76,6 +117,8 @@ public class Application {
                 else if(move.equals("U") && bridgeAnswer.get(idx).equals("D")){
                     moveUp.add("X");
                     moveDown.add(" ");
+                    result="실패";
+                    isRestart=restartGame();
                     break;
                 }
                 else if(move.equals("D") && bridgeAnswer.get(idx).equals("D")){
@@ -85,39 +128,23 @@ public class Application {
                 else if(move.equals("D") && bridgeAnswer.get(idx).equals("U")){
                     moveUp.add(" ");
                     moveDown.add("X");
+                    result="실패";
+                    isRestart=restartGame();
                     break;
                 }
-
-                if (moveUp.size()==num){
-                    System.out.println("최종 게임 결과");
+                if (moveUp.size()<num){
+                    System.out.println("[ "+String.join(" | ",moveUp)+" ]");
+                    System.out.println("[ "+String.join(" | ",moveDown)+" ]");
                 }
-                System.out.println("["+String.join(" | ",moveUp)+"]");
-                System.out.println("["+String.join(" | ",moveDown)+"]");
-                System.out.println("게임 성공 여부: 성공");
-
-
+                idx+=1;
 
             } catch(IllegalArgumentException | NoSuchElementException e){ // 입력안함은 여기서 자동 제거
                 System.out.println(PREFIX_ERROR+e.getMessage());
             }
 
         }
+        return List.of(List.of(result,isRestart),moveUp,moveDown);
 
-        try{
-            System.out.println("게임을 다시 시도할지 여부를 입력해주세요. (재시도: R, 종료: Q)");
-            // 숫자 입력
-            String move = readInputWithRetry(List.of(
-                    Validator::validateNotBlank,
-                    Validator::validateRestart
-            ));
-            if (move.equals("R")){
-                return true;
-            }
-
-        } catch(IllegalArgumentException | NoSuchElementException e){ // 입력안함은 여기서 자동 제거
-            System.out.println(PREFIX_ERROR+e.getMessage());
-        }
-        return false;
     }
 
     static void initCommands() {
@@ -149,6 +176,7 @@ public class Application {
 
     static String readInput(List<Validator> validators) {
         String input = Console.readLine();
+        System.out.println(input);
         for (Validator v : validators) {
             v.validate(input);
         }
@@ -166,7 +194,7 @@ public class Application {
                 System.out.println(PREFIX_ERROR + e.getMessage());
 
                 if (retry >= MAX_RETRY) {
-                    throw new IllegalArgumentException("입력 횟수를 초과했습니다.");
+                    throw new IllegalStateException("입력 횟수를 초과했습니다.");
                 }
             }
         }

@@ -29,13 +29,13 @@ public interface Validator {
     }
 
     static void validateMove(String input) {
-        if (input.equals("U") || input.equals("D") ) {
+        if (!(input.equals("U") || input.equals("D"))) {
             throw new IllegalArgumentException("U와 D중 하나를 입력해야합니다.");
         }
     }
 
     static void validateRestart(String input) {
-        if (input.equals("R") || input.equals("Q") ) {
+        if (!(input.equals("R") || input.equals("Q"))) {
             throw new IllegalArgumentException("R와 Q중 하나를 입력해야합니다.");
         }
     }
