@@ -1,5 +1,7 @@
 package bridge.service;
 
+import bridge.view.InputView;
+import bridge.view.OutputView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +11,13 @@ import java.util.List;
 public class BridgeGame {
     private List<String> bridge;
     private ArrayList<String>[] moveResult = new ArrayList[2];
+    private int bridgeSize;
+    private int currentIndex = 0;
+    private int tryCount = 1;
 
     public BridgeGame(List<String> brideList) {
         this.bridge = brideList;
+        this.bridgeSize = brideList.size();
         moveResult[0] = new ArrayList<>();
         moveResult[1] = new ArrayList<>();
     }
@@ -39,11 +45,14 @@ public class BridgeGame {
     public void retry() {
         moveResult[0].remove(moveResult[0].size()-1);
         moveResult[1].remove(moveResult[1].size()-1);
+        tryCount++;
     }
 
+    /**
+     * 허용된 칸인지 확인하는 메서드
+     * */
     public String checkMoveable(String movingInput){
-        String currentBox = bridge.get(bridge.size()-1);
-
+        String currentBox = bridge.get(currentIndex);
         if(movingInput.equals(currentBox)){
             return "O";
         }
@@ -52,6 +61,33 @@ public class BridgeGame {
 
     public ArrayList<String>[] getMoveResult() {
         return moveResult;
+    }
+
+
+    public void run(){
+        while(currentIndex < bridgeSize){
+            // 라운드 진행
+            String movingInput = InputView.readMoving();
+            String result = checkMoveable(movingInput);
+            move(movingInput, result);
+            currentIndex++;
+
+
+            // 중간 출력
+            OutputView.printMap(moveResult);
+
+            if(result.equals("X")){
+                String command = InputView.readGameCommand();
+                if(command.equals("Q")){
+                    OutputView.printResult(moveResult,bridgeSize,tryCount,currentIndex);
+                    return;
+                }
+                retry();
+                currentIndex--;
+            }
+        }
+
+        OutputView.printResult(moveResult,bridgeSize,tryCount, currentIndex);
     }
 
 
