@@ -266,7 +266,7 @@ public class BridgeMaker {
 
 ### BridgeRandomNumberGenerator 클래스
 
-- Random 값 추출은 제공된 `bridge.BridgeRandomNumberGenerator`의 `generate()`를 활용한다.
+- Random 값 추출은 제공된 `bridge.domain.BridgeRandomNumberGenerator`의 `generate()`를 활용한다.
 - `BridgeRandomNumberGenerator`, `BridgeNumberGenerator` 클래스의 코드는 변경할 수 없다.
 
 #### 사용 예시
@@ -291,3 +291,118 @@ int number = bridgeNumberGenerator.generate();
 - **Git의 커밋 단위는 앞 단계에서 `docs/README.md`에 정리한 기능 목록 단위**로 추가한다.
     - [커밋 메시지 컨벤션](https://gist.github.com/stephenparish/9941e89d80e2bc58a153) 가이드를 참고해 커밋 메시지를 작성한다.
 - 과제 진행 및 제출 방법은 [프리코스 과제 제출](https://github.com/woowacourse/woowacourse-docs/tree/master/precourse) 문서를 참고한다.
+
+
+# 주의 사항 리마인더
+
+- 위 아래 두 칸으로 이루어진 다리
+- 다리의 길이는 숫자로 입력 받고 생성
+  - 0과 1을 통해서 건널 수 있는 여부 결정
+  - 위 칸 -U, 아래칸 -D
+  - 0 → 아래칸 가능 , 1 → 위칸 가능
+- 건널 수 있으면 ‘O’, 없으면 ‘X’
+- 종료 조건
+  - 끝까지 건넌다.
+  - 건널 수 없는 상황에 처한다
+- 잘못된 입력값을 받으면 그 부분 부터 입력을 다시 받는다
+
+예상 필요 기능
+
+다리 생성
+
+다리 칸 별로 값 확인
+
+중간 결과 출력
+
+최종 결과 출력
+
+시도 횟수 출력
+
+# 서비스 흐름 구성
+
+### **다리 길이 입력 받기**
+
+**입력**
+
+1. 다리 길이 입력 받기
+  1. 형식 에러
+  2. 3 ~20 아니면 에러 발생
+
+**출력**
+
+- 없음
+
+**반환**
+
+- 입력 받은 다리 길이 반환
+- 자료형 : int
+
+### 다리 생성
+
+**입력**
+
+1. 다리 길이(n)만큼의 2행 n열의 true,false 이중 배열 생성
+
+**출력**
+
+- 없음
+
+**반환**
+
+- 게임에 사용할 다리 반환
+- List<String>
+
+### 매 턴 마다 이동할 칸 입력 받기
+
+**입력**
+
+1. 선택할 위치 입력 받기
+  1. 형식 에러
+
+**출력**
+
+- 없음
+
+**반환**
+
+- 선택한 위치 반환
+- 자료형 : String
+
+### 게임 진행 하기
+
+입력
+
+1. 이동할 칸 값 받아오기
+  1. 자료형 String
+
+출력
+
+- 이동 성공 시
+  - 중간 결과 출력
+- 이동 실패 시
+  - 중간 결과 출력
+  - 게임 속행 여부 메시지 출력
+
+반환
+
+- 이동 성공 시 true, 이동 실패 시 false
+- 자료형 boolean
+
+# 데이터 구성
+
+**게임용 다리 데이터**
+
+→ 데이터 자료 구조 : List<String>
+
+필요한 데이터
+
+- U,D를 통해서 어느 방향이 가능한지를 저장
+
+**중간 결과 데이터(최종까지 사용)**
+
+→ 데이터 자료 구조 : List<String> 두 개  or List<List<String>>
+
+필요한 데이터
+
+- 위 칸
+- 아래 칸
