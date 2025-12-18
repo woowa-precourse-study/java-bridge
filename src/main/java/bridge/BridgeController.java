@@ -17,23 +17,42 @@ public class BridgeController {
         int times = 0;
         List<String> moveUp = new ArrayList<>();
         List<String> moveDown = new ArrayList<>();
-        String gameResult = "";
-
         BridgeGame bridgeGame = new BridgeGame(num);
+        String result="";
 
         while (true) {
+            bridgeGame.retry();
             times += 1;
-            List<String> copyAnswer = bridgeGame.retry();
-            List<List<String>> result = playGame(num, copyAnswer);
-            moveUp = result.get(1);
-            moveDown = result.get(2);
-            gameResult = result.get(0).get(0);
+            int idx = 0;
+            result = "성공";
+            String isRestart = "Quit";
+            while (moveUp.size() < num) {
+                String move = inputView.readMoving();
+                // move 사용자  , bridgeAnswer.get(idx) : 답
+                bridgeGame.move(move,idx);
+                if (moveUp.size() < num) {
+                    moveUp = bridgeGame.getMoveUp();
+                    moveDown = bridgeGame.getMoveDown();
+                    outputView.printMap(moveUp, moveDown);
+                }
 
-            if (gameResult.equals("성공") || gameResult.equals("Restart")) {
+                if (bridgeGame.userCorrect(move,idx).equals("X")){
+                    result = "실패";
+                    isRestart = inputView.readGameCommand();
+                    break;
+                }
+
+                idx += 1;
+            }
+
+            moveUp = bridgeGame.getMoveUp();
+            moveDown = bridgeGame.getMoveDown();
+
+            if (result.equals("성공") || isRestart.equals("Restart")) {
                 break;
             }
         }
-        outputView.printResult(moveUp, moveDown, gameResult, times);
+        outputView.printResult(moveUp, moveDown, result, times);
 
     }
 
@@ -46,6 +65,7 @@ public class BridgeController {
         String isRestart = "Quit";
         while (moveUp.size() < num) {
             String move = inputView.readMoving();
+            // move 사용자  , bridgeAnswer.get(idx) : 답
 
             if (move.equals("U") && bridgeAnswer.get(idx).equals("U")) {
                 moveUp.add("O");
