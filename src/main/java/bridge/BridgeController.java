@@ -6,32 +6,24 @@ import java.util.List;
 public class BridgeController {
     private final InputView inputView;
     private final OutputView outputView;
-    //    private final BridgeService bridgeService;
-    static String PREFIX_ERROR = "[ERROR] ";
-    static final int MAX_RETRY = 10;
 
     public BridgeController() {
         this.inputView = new InputView();
         this.outputView = new OutputView();
-//        this.bridgeService = bridgeService;
     }
 
     public void run() {
         int num = inputView.readBridgeSize();
         int times = 0;
-
-        // 정답이 되는 다리 건설
-        BridgeNumberGenerator bridgeNumberGenerator = new BridgeRandomNumberGenerator();
-        BridgeMaker bridgeMaker = new BridgeMaker(bridgeNumberGenerator);
-        List<String> bridgeAnswer = bridgeMaker.makeBridge(num);
-        List<String> copyAnswer = new ArrayList<>();
         List<String> moveUp = new ArrayList<>();
         List<String> moveDown = new ArrayList<>();
         String gameResult = "";
 
+        BridgeGame bridgeGame = new BridgeGame(num);
+
         while (true) {
             times += 1;
-            copyAnswer.addAll(bridgeAnswer);  // 깊은 복사
+            List<String> copyAnswer = bridgeGame.retry();
             List<List<String>> result = playGame(num, copyAnswer);
             moveUp = result.get(1);
             moveDown = result.get(2);
@@ -41,7 +33,6 @@ public class BridgeController {
                 break;
             }
         }
-
         outputView.printResult(moveUp, moveDown, gameResult, times);
 
     }
