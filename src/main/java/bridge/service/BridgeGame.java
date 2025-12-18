@@ -59,10 +59,6 @@ public class BridgeGame {
         return "X";
     }
 
-    public ArrayList<String>[] getMoveResult() {
-        return moveResult;
-    }
-
 
     public void run(){
         while(currentIndex < bridgeSize){
@@ -72,15 +68,14 @@ public class BridgeGame {
             move(movingInput, result);
             currentIndex++;
 
-
             // 중간 출력
             OutputView.printMap(moveResult);
 
+            //결과가 X일 경우 재시작 여부 판단
             if(result.equals("X")){
                 String command = InputView.readGameCommand();
                 if(command.equals("Q")){
-                    OutputView.printResult(moveResult,bridgeSize,tryCount,currentIndex);
-                    return;
+                    break;
                 }
                 retry();
                 currentIndex--;
