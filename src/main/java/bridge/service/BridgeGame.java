@@ -1,5 +1,6 @@
 package bridge.service;
 
+import bridge.util.InputHandler;
 import bridge.view.InputView;
 import bridge.view.OutputView;
 import java.util.ArrayList;
@@ -63,7 +64,10 @@ public class BridgeGame {
     public void run(){
         while(currentIndex < bridgeSize){
             // 라운드 진행
-            String movingInput = InputView.readMoving();
+            // 칸 입력 받기
+            String movingInput = InputHandler.retry(InputView::readMoving);
+
+            // 진행가능 여부 계산
             String result = checkMoveable(movingInput);
             move(movingInput, result);
             currentIndex++;
@@ -73,7 +77,7 @@ public class BridgeGame {
 
             //결과가 X일 경우 재시작 여부 판단
             if(result.equals("X")){
-                String command = InputView.readGameCommand();
+                String command = InputHandler.retry(InputView::readGameCommand);
                 if(command.equals("Q")){
                     break;
                 }
