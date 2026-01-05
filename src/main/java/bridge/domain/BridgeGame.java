@@ -31,6 +31,7 @@ public class BridgeGame {
      */
     public void move(String userInput) {
         String answer=answerBridges.get(bridges.getCount());
+        validateCorrect(userInput, answer);
         if (userInput.equals("U")){
             bridges.addUp(answer.equals(userInput));
             bridges.addDown(false);
@@ -38,6 +39,12 @@ public class BridgeGame {
         }
         bridges.addUp(false);
         bridges.addDown(answer.equals(userInput));
+    }
+
+    private void validateCorrect(String userInput, String answer) {
+        if (!answer.equals(userInput)){
+            throw new IllegalArgumentException("실패");
+        }
     }
 
     /**

@@ -35,4 +35,10 @@ public interface Validator {
         }
     }
 
+    static void validateCommand(String input) {
+        if (!Set.of("R","Q").contains(input)) {
+            throw new IllegalArgumentException("[ERROR] 입력이 올바르지 않습니다.");
+        }
+    }
+
 }

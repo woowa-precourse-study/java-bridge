@@ -20,11 +20,25 @@ public class Controller {
         int size = doRetry(inputView::readBridgeSize);
         BridgeGame bridgeGame=service.getBridgeGame(size);
 
-        for (int i=0;i<size;i++){
-            String choice = doRetry(inputView::readMoving);
-            bridgeGame.move(choice);
-            OutputView.printMap(bridgeGame.getBridges());
+        while(true){
+            try{
+                for (int i=0;i<size;i++){
+                    String choice = doRetry(inputView::readMoving);
+                    bridgeGame.move(choice);
+                    OutputView.printMap(bridgeGame.getBridges());
+                }
+            } catch (IllegalArgumentException e){
+                String command = doRetry(inputView::readGameCommand);
+                if (command.equals("Q")){
+                    break;
+                }
+                service.retryGame(bridgeGame);
+            }
         }
+
+
+
+
 
 
     }

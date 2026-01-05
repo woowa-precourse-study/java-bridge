@@ -9,4 +9,8 @@ public class Service {
         BridgeNumberGenerator bridgeNumberGenerator= new BridgeRandomNumberGenerator();
         return new BridgeGame(bridgeNumberGenerator,size);
     }
+
+    public void retryGame(BridgeGame bridgeGame){
+        bridgeGame.retry();
+    }
 }
