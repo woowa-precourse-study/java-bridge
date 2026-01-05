@@ -58,15 +58,14 @@ class ApplicationTest extends NsTest {
         BridgeGame bridgeGame=new BridgeGame(numberGenerator,3);
 
         bridgeGame.move("U");
-        bridgeGame.move("U");
-        bridgeGame.move("U");
+        bridgeGame.move("D");
+        bridgeGame.move("D");
 
 
         BridgeGroup bridges=bridgeGame.getBridges();
 
         assertThat(bridges.getUp().getBridge()).isEqualTo(List.of("O"," "," "));
-        assertThat(bridges.getDown().getBridge()).isEqualTo(List.of(" "," "," "));
-
+        assertThat(bridges.getDown().getBridge()).isEqualTo(List.of(" ","O","O"));
 
     }
 
