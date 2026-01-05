@@ -14,13 +14,15 @@ public class BridgeGame {
     private final List<String> answerBridges;
     private final BridgeMaker bridgeMaker;
 
-    public BridgeGame(int size) {
+    public BridgeGame(BridgeNumberGenerator bridgeNumberGenerator, int size) {
         this.bridges=new BridgeGroup();
-        BridgeNumberGenerator bridgeNumberGenerator = new BridgeRandomNumberGenerator();
         this.bridgeMaker = new BridgeMaker(bridgeNumberGenerator);
         this.answerBridges = bridgeMaker.makeBridge(size);
     }
 
+    public List<Bridge> getBridges() {
+        return bridges.getBridgeGroup();
+    }
 
     /**
      * 사용자가 칸을 이동할 때 사용하는 메서드
@@ -28,7 +30,14 @@ public class BridgeGame {
      * 이동을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
     public void move(String userInput) {
-
+        String answer=answerBridges.get(bridges.getCount());
+        if (userInput.equals("U")){
+            bridges.addUp(answer.equals(userInput));
+            bridges.addDown(false);
+            return;
+        }
+        bridges.addUp(false);
+        bridges.addDown(answer.equals(userInput));
     }
 
     /**

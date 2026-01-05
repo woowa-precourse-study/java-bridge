@@ -13,4 +13,12 @@ public class Bridge {
     public void clear(){
         bridge.clear();
     }
+
+    public List<String> getBridge() {
+        return bridge;
+    }
+
+    public int getSize() {
+        return bridge.size();
+    }
 }
