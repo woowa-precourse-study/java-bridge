@@ -18,29 +18,29 @@ public class Controller {
     public void run() {
 
         int size = doRetry(inputView::readBridgeSize);
-        BridgeGame bridgeGame=service.getBridgeGame(size);
+        BridgeGame bridgeGame = service.getBridgeGame(size);
 
-        while(true){
-            try{
-                for (int i=0;i<size;i++){
+        int count = 1;
+        boolean isSuccess = false;
+        while (true) {
+            try {
+                for (int i = 0; i < size; i++) {
                     String choice = doRetry(inputView::readMoving);
                     bridgeGame.move(choice);
                     OutputView.printMap(bridgeGame.getBridges());
                 }
-            } catch (IllegalArgumentException e){
+                isSuccess = true;
+                break;
+            } catch (IllegalArgumentException e) {
                 String command = doRetry(inputView::readGameCommand);
-                if (command.equals("Q")){
+                if (command.equals("Q")) {
                     break;
                 }
+                count += 1;
                 service.retryGame(bridgeGame);
             }
         }
-
-
-
-
-
-
+        OutputView.printResult(isSuccess, count);
     }
 
     private <T> T doRetry(Supplier<T> action) {
