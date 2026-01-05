@@ -1,5 +1,6 @@
 package bridge.controller;
 
+import bridge.domain.BridgeGame;
 import bridge.service.Service;
 
 import java.util.function.Supplier;
@@ -17,6 +18,14 @@ public class Controller {
     public void run() {
 
         int size = doRetry(inputView::readBridgeSize);
+        BridgeGame bridgeGame=service.getBridgeGame(size);
+
+        for (int i=0;i<size;i++){
+            String choice = doRetry(inputView::readMoving);
+            bridgeGame.move(choice);
+            OutputView.printMap(bridgeGame.getBridges());
+        }
+
 
     }
 
