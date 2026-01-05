@@ -75,7 +75,7 @@ public class InputView {
     }
 
 
-    static String readInput(List<Validator> validators) {
+    private String readInput(List<Validator> validators) {
         String input = Console.readLine();
         System.out.println(input);
         for (Validator v : validators) {
@@ -85,7 +85,7 @@ public class InputView {
     }
 
 
-    static String readInputWithRetry(List<Validator> validators) {
+    private String readInputWithRetry(List<Validator> validators) {
         int retry = 0;
         while (true) {
             try {
