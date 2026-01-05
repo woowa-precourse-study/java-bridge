@@ -11,6 +11,14 @@ public class BridgeGroup {
         this.down = new Bridge();
     }
 
+    public Bridge getUp() {
+        return up;
+    }
+
+    public Bridge getDown() {
+        return down;
+    }
+
     public List<Bridge> getBridgeGroup() {
         return List.of(up,down);
     }

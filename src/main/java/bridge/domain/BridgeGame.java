@@ -20,8 +20,8 @@ public class BridgeGame {
         this.answerBridges = bridgeMaker.makeBridge(size);
     }
 
-    public List<Bridge> getBridges() {
-        return bridges.getBridgeGroup();
+    public BridgeGroup getBridges() {
+        return bridges;
     }
 
     /**
