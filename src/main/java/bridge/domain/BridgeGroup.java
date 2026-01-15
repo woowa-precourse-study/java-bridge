@@ -33,19 +33,13 @@ public class BridgeGroup {
         return up.getSize();
     }
 
-    public void addUp(boolean isAnswer){
-        if (isAnswer){
-            up.add("O");
+    public void move(String userInput, String answer){
+        if (userInput.equals("U")){
+            up.add(answer.equals(userInput)?"O":"X");
+            down.add(" ");
             return;
         }
         up.add(" ");
-    }
-
-    public void addDown(boolean isAnswer){
-        if (isAnswer){
-            down.add("O");
-            return;
-        }
-        down.add(" ");
+        down.add(answer.equals(userInput)?"O":"X");
     }
 }

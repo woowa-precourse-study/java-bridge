@@ -3,6 +3,7 @@ package bridge;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertRandomNumberInRangeTest;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.util.Lists.newArrayList;
 
 import bridge.domain.Bridge;
@@ -52,8 +53,9 @@ class ApplicationTest extends NsTest {
         });
     }
 
+    // bridgeGame의 move를 BridgeGroup으로 옯기고 나서 아직 수정 안함 (이전 버전)
     @Test
-    void move(){
+    void move_답_모두_맞았을떄(){
         BridgeNumberGenerator numberGenerator = new TestNumberGenerator(newArrayList(1, 0, 0));
         BridgeGame bridgeGame=new BridgeGame(numberGenerator,3);
 
@@ -67,6 +69,18 @@ class ApplicationTest extends NsTest {
         assertThat(bridges.getUp().getBridge()).isEqualTo(List.of("O"," "," "));
         assertThat(bridges.getDown().getBridge()).isEqualTo(List.of(" ","O","O"));
 
+    }
+
+    @Test
+    void move_답틀리면_예외_던지는지_예외테스트(){
+        BridgeNumberGenerator numberGenerator = new TestNumberGenerator(newArrayList(1, 0, 0));
+        BridgeGame bridgeGame=new BridgeGame(numberGenerator,3);
+
+        BridgeGroup bridges=bridgeGame.getBridges();
+
+        assertThatThrownBy(() -> bridgeGame.move("D"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("실패");;
     }
 
     @Override

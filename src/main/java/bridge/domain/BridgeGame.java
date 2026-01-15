@@ -1,9 +1,6 @@
 package bridge.domain;
 
 import bridge.utils.BridgeNumberGenerator;
-import bridge.utils.BridgeRandomNumberGenerator;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,11 +9,10 @@ import java.util.List;
 public class BridgeGame {
     private final BridgeGroup bridges;
     private final List<String> answerBridges;
-    private final BridgeMaker bridgeMaker;
 
     public BridgeGame(BridgeNumberGenerator bridgeNumberGenerator, int size) {
         this.bridges=new BridgeGroup();
-        this.bridgeMaker = new BridgeMaker(bridgeNumberGenerator);
+        BridgeMaker bridgeMaker = new BridgeMaker(bridgeNumberGenerator);
         this.answerBridges = bridgeMaker.makeBridge(size);
     }
 
@@ -32,13 +28,7 @@ public class BridgeGame {
     public void move(String userInput) {
         String answer=answerBridges.get(bridges.getCount());
         validateCorrect(userInput, answer);
-        if (userInput.equals("U")){
-            bridges.addUp(answer.equals(userInput));
-            bridges.addDown(false);
-            return;
-        }
-        bridges.addUp(false);
-        bridges.addDown(answer.equals(userInput));
+        bridges.move(userInput, answer);
     }
 
     private void validateCorrect(String userInput, String answer) {
